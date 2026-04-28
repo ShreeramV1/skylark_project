@@ -1,70 +1,275 @@
-# Getting Started with Create React App
+# Monday.com Business Intelligence Agent
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A conversational AI agent that analyzes work orders and sales pipelines from Monday.com boards, providing founders and executives with real-time business intelligence through natural language queries.
 
-## Available Scripts
+Hosted link : https://cute-jelly-b828f9.netlify.app/
 
-In the project directory, you can run:
+## 🎯 Features
 
-### `npm start`
+- **Dual-Board Integration**: Analyze Work Orders and Deals pipeline simultaneously
+- **Natural Language Queries**: Ask business questions in plain English
+- **Conversation Memory**: Maintains context across 3 exchanges for follow-up questions
+- **Multi-Sector Analysis**: Compare metrics across Mining, Powerline, Renewables, DSP, Tender, and Railways sectors
+- **Real-time Data**: Fresh data fetched on every query with intelligent caching
+- **Executive Summaries**: Clean, formatted responses with tables and key insights
+- **Graceful Data Handling**: Processes messy real-world data with missing values
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 📊 Supported Queries
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+"How's our pipeline for the energy sector?"
+"What's our total billed amount this month?"
+"Which deals are most likely to close?"
+"Compare work orders vs deal pipeline for renewables"
+"Show me high probability deals with their status"
+"What's our revenue by sector?"
+"Tell me more about mining deals" (follow-up with context)
+```
 
-### `npm test`
+## 🚀 Quick Start
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- Monday.com API token
+- Google Gemini API key
 
-### `npm run build`
+### Backend Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/monday-bi-agent.git
+cd monday-bi-agent
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. **Install dependencies**
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. **Configure environment variables**
+Create a `.env` file:
+```env
+MONDAY_API_TOKEN=your_monday_api_token
+GEMINI_API_KEY=your_gemini_api_key
+MONDAY_BOARD_ID=your_work_orders_board_id
+MONDAY_DEALS_BOARD_ID=your_deals_board_id
+NODE_ENV=development
+PORT=3001
+```
 
-### `npm run eject`
+4. **Start the backend**
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Server runs on `http://localhost:3001`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Frontend Setup
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. **Navigate to frontend directory**
+```bash
+cd chatbot-ui
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+2. **Install dependencies**
+```bash
+npm install
+```
 
-## Learn More
+3. **Create environment file**
+```bash
+# .env.local
+REACT_APP_API_URL=http://localhost:3001
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. **Start development server**
+```bash
+npm start
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+UI runs on `http://localhost:3000`
 
-### Code Splitting
+## 📦 Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Backend (Render)
 
-### Analyzing the Bundle Size
+1. Push code to GitHub
+2. Go to [render.com](https://render.com)
+3. Create new Web Service
+4. Connect GitHub repo
+5. Set build command: `npm install`
+6. Set start command: `npm start`
+7. Add environment variables:
+   - `MONDAY_API_TOKEN`
+   - `GEMINI_API_KEY`
+   - `MONDAY_BOARD_ID`
+   - `MONDAY_DEALS_BOARD_ID`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Frontend (Netlify)
 
-### Making a Progressive Web App
+1. Build the React app:
+```bash
+cd chatbot-ui
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+2. Deploy to Netlify:
+   - Connect GitHub repo
+   - Build command: `npm run build`
+   - Publish directory: `build`
+   - Add env variable: `REACT_APP_API_URL=https://your-render-url.onrender.com`
 
-### Advanced Configuration
+## 📚 API Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### POST `/api/query`
+Ask a business question.
 
-### Deployment
+**Request:**
+```json
+{
+  "message": "Show me the energy sector pipeline"
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+**Response:**
+```json
+{
+  "answer": "# Energy Sector Pipeline Overview\n\n...",
+  "dataQuality": {
+    "totalRecords": 175,
+    "completeRecords": 175
+  }
+}
+```
 
-### `npm run build` fails to minify
+### GET `/api/health`
+Check backend status.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Response:**
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-04-28T10:30:00.000Z",
+  "workOrdersBoard": "5028090374",
+  "dealsBoard": "5028090373",
+  "conversationLength": 2,
+  "environment": "production"
+}
+```
+
+### GET `/api/history`
+View conversation history.
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "conversationLength": 6,
+  "history": [
+    {
+      "role": "user",
+      "content": "Show me the energy sector pipeline"
+    },
+    {
+      "role": "model",
+      "content": "# Energy Sector Pipeline..."
+    }
+  ]
+}
+```
+
+### POST `/api/clear-history`
+Clear conversation history.
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "message": "Conversation history cleared"
+}
+```
+
+## 🔐 Security
+
+### Current Implementation
+- API keys stored in environment variables
+- CORS enabled for frontend communication
+- Request validation on all endpoints
+
+### Production Recommendations
+- Use AWS Secrets Manager or HashiCorp Vault for key management
+- Implement rate limiting (e.g., express-rate-limit)
+- Add authentication/authorization layer
+- Use HTTPS only (Render/Netlify handle this)
+- Add request signing for API calls
+
+## 📊 Data Normalization
+
+### Work Orders Board
+Maps Monday.com columns to business fields:
+- Deal value (amount excl/incl GST)
+- Billing & collection metrics
+- Execution status & timeline
+- Sector classification
+
+### Deals Board
+Maps deal pipeline data:
+- Deal value & probability
+- Deal stage & status
+- Close dates (actual & tentative)
+- Sector/service categorization
+
+**Handling Messy Data:**
+- Null values treated as 0 or 'N/A'
+- Currency parsed from masked strings
+- Status values normalized to standard categories
+- Missing sectors classified as 'Unclassified'
+
+## 💡 Key Features Explained
+
+### Conversation Memory
+- Keeps last 3 exchanges (6 messages)
+- Auto-trims old messages when exceeded
+- Provides context to LLM for follow-up questions
+- Prevents token bloat & response lag
+
+### Dual-Dataset Analysis
+- Simultaneously analyzes Work Orders + Deals
+- Generates combined data analysis
+- Enables cross-board insights (pipeline-to-execution conversion)
+- Highlights sector-wise trends
+
+### Executive Summaries
+- Lead with headline metrics
+- Clean markdown formatting
+- Tables for comparisons
+- Data quality flagging (when >50% records incomplete)
+
+## 🐛 Troubleshooting
+
+### 500 Error on Query
+1. Check Render logs: `https://dashboard.render.com`
+2. Verify environment variables are set
+3. Test Monday.com API token:
+```bash
+curl -X POST https://api.monday.com/v2 \
+  -H "Authorization: YOUR_TOKEN" \
+  -d '{"query": "{ me { name } }"}'
+```
+4. Test Gemini API key in [Google AI Studio](https://aistudio.google.com)
+
+### CORS Error
+- Backend CORS is enabled in `server.js`
+- Verify frontend URL in Netlify environment variables
+- Check browser console for actual error
+
+### No Data Returned
+- Verify board IDs are correct
+- Check if boards have items
+- Test data fetch: `curl http://localhost:3001/api/health`
+
+### Follow-up Questions Losing Context
+- History should auto-maintain (last 3 exchanges)
+- Check conversation history: `/api/history`
+- Clear if needed: `POST /api/clear-history`
